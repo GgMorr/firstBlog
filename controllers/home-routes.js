@@ -12,7 +12,7 @@ const { Post, User, Comment } = require('../models');
     .then((dbPostData) => {
       const posts = dbPostData.map((post) => post.get({ plain: true }));
 
-      res.render("all-posts", { posts });
+      res.render("all-posts", { posts, loggedIn: req.session.loggedIn });
     })
     .catch((err) => {
       res.status(500).json(err);

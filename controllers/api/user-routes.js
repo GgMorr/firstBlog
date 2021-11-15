@@ -2,9 +2,11 @@ const router = require('express').Router();
 const { User, Post, Comment } = require('../../models');
 
 router.post("/", (req, res) => {
+  console.log("post route");
   User.create({
     username: req.body.username,
-    password: req.body.password
+    password: req.body.password,
+    email: req.body.email
   })
   .then(dbUserData => {
     req.session.save(() => {

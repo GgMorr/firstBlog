@@ -1,9 +1,9 @@
 const router = require('express').Router();
-//const sequelize = require('../config/connection');
- const { Post } = require("../models/");
- const withAuth = require("../utils/auth");
+const sequelize = require('../config/connection');
+const { Post, User, Comment } = require("../models/");
+const withAuth = require("../utils/auth");
 
-
+// ORIGINAL
  router.get("/", withAuth, (req, res) => {
   Post.findAll({
     where: {
@@ -13,8 +13,7 @@ const router = require('express').Router();
     .then(dbPostData => {
       const posts = dbPostData.map((post) => post.get({ plain: true }));
 
-      res.render("all-posts-admin", {
-        layout: "dashboard",
+      res.render("dashboard", {
         posts
       });
     })
@@ -23,6 +22,49 @@ const router = require('express').Router();
       res.redirect("login");
     });
 });
+
+// ////NEWLY ADDED
+// router.get("/", withAuth, (req, res) => {
+//   Post.findAll({
+//     where: {
+//       userId: req.session.userId
+//     },
+//     attributes: [
+//       'id',
+//       'post_url',
+//       'title',
+//       'created_at',
+//     ],
+//     include: [
+//       {
+//         model: Comment,
+//         attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+//         include: {
+//           model: User,
+//           attributes: ['username']
+//         }
+//       },
+//       {
+//         model: User,
+//         attributes: ['username']
+//       }
+//     ]
+//   })
+//     .then(dbPostData => {
+//       const posts = dbPostData.map((post) => post.get({ plain: true }));
+
+//       res.render("dashboard", {
+//         posts,
+//         loggedIn: true
+//       });
+//     })
+//     .catch(err => {
+//       console.log(err);
+//       res.status(500).json(err);
+//     });
+// });
+// //// END OF NEWLY ADDED
+
 
 router.get("/new", withAuth, (req, res) => {
   res.render("new-post", {
